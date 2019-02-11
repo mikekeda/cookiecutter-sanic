@@ -1,0 +1,16 @@
+.idea/
+reports/
+.cache/
+.pytest_cache/
+
+.coverage
+.DS_Store
+
+*.pyc
+*.egg
+*.egg-info/
+*.log
+*.pyc
+*.sqlite3
+*.rdb
+*.pid

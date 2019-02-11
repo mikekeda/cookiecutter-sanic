@@ -1,0 +1,13 @@
+sanic
+pytest
+pytest-sanic
+sphinx
+tox
+bumpversion
+twine
+coverage==4.5.1
+pytest-cov
+pytest-runner
+gitchangelog
+asyncpg
+gino
