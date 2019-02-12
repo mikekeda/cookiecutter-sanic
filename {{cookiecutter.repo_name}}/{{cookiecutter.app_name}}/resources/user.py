@@ -1,10 +1,14 @@
 from sanic.exceptions import abort
-from sanic.views import HTTPMethodView
 from sanic.response import json as sanic_json
+from sanic.views import HTTPMethodView
 
 from asyncpg.exceptions import DataError
+from marshmallow.exceptions import ValidationError
 
 from {{cookiecutter.app_name}}.models.user import User
+from {{cookiecutter.app_name}}.schemas.user import UserSchema
+
+schema = UserSchema()
 
 
 class UsersView(HTTPMethodView):
@@ -19,11 +23,10 @@ class UsersView(HTTPMethodView):
         """ Create a new user. """
         user = {}
         try:
-            data = request.json
-            data.pop('id', None)  # remove id
+            data = schema.load(request.json)
             user = (await User.create(**data)).to_dict()
-        except ValueError as e:
-            abort(400, message=str(e))
+        except (ValidationError, DataError) as e:
+            abort(400, message=e)
 
         return sanic_json(user, 201)
 
@@ -41,10 +44,11 @@ class UserView(HTTPMethodView):
         user = await User.get_or_404(pk)
 
         try:
-            await user.update(**request.json).apply()
+            data = schema.load(request.json)
+            await user.update(**data).apply()
 
-        except DataError as e:
-            abort(400, message=str(e))
+        except (ValidationError, DataError) as e:
+            abort(400, message=e)
 
         return sanic_json(user.to_dict(), 200)
 

@@ -11,3 +11,4 @@ pytest-runner
 gitchangelog
 asyncpg
 gino
+marshmallow==3.0.0rc4
